@@ -61,7 +61,7 @@ const App: FunctionComponent = () => {
     if (isSimulationRunning) {
       const interval = setInterval(() => {
         doProgressSimulation();
-      }, 500);
+      }, 350);
 
       return () => {
         clearInterval(interval);

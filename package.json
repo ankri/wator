@@ -1,5 +1,6 @@
 {
   "name": "wator",
+  "homepage": "http://ankri.github.io/wator",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
