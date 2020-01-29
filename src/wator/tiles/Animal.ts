@@ -152,6 +152,7 @@ export class Shark extends Animal {
 
 export class Fish extends Animal implements Edible {
   public readonly type = 'fish';
+  private preferredDirection: Direction;
 
   constructor({ tile, weight = 15 }: { tile: OceanTile; weight?: number }) {
     super({
@@ -161,23 +162,28 @@ export class Fish extends Animal implements Edible {
       tile,
       weight
     });
+
+    this.preferredDirection =
+      allDirections[Math.floor(Math.random() * allDirections.length)];
   }
 
-  private calculatePreferredDirection = (): Direction => {
-    return allDirections[Math.floor(Math.random() * allDirections.length)];
+  private calculateMovementDirection = (): Direction => {
+    return [...allDirections, this.preferredDirection][
+      Math.floor(Math.random() * allDirections.length + 1)
+    ];
   };
 
   protected move = () => {
-    const tileToMoveTo = Ocean.getOcean().findOceanTileInDirection({
+    const possibleTileToMoveTo = Ocean.getOcean().findOceanTileInDirection({
       fromCoordinates: this.getTile().coordinates,
-      inDirection: this.calculatePreferredDirection()
+      inDirection: this.calculateMovementDirection()
     });
 
-    if (tileToMoveTo !== null && tileToMoveTo.isEmpty()) {
-      this.moveIntoTile(tileToMoveTo);
+    if (possibleTileToMoveTo !== null && possibleTileToMoveTo.isEmpty()) {
+      this.moveIntoTile(possibleTileToMoveTo);
 
-      if (tileToMoveTo.hasContent('plankton')) {
-        (tileToMoveTo
+      if (possibleTileToMoveTo.hasContent('plankton')) {
+        (possibleTileToMoveTo
           .getContents()
           .find(content => content.type === 'plankton') as Plankton).beEaten();
         this.gainWeight();
