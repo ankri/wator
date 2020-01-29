@@ -17,7 +17,9 @@ const simulation = Simulation.createSimulation({
   }
 });
 
-const Tile: FunctionComponent<{ tile: OceanTile }> = ({ tile }) => {
+const Tile: FunctionComponent<{ oceanTile: OceanTile }> = ({
+  oceanTile: tile
+}) => {
   const className = classNames('tile', {
     water: tile.isEmpty(),
     plankton: tile.hasContent('plankton'),
@@ -36,24 +38,30 @@ const Tile: FunctionComponent<{ tile: OceanTile }> = ({ tile }) => {
   return <div className={className}>{content}</div>;
 };
 
+const createKey = (index: number, tile: OceanTile) =>
+  `tile-${index}-${tile
+    .getContents()
+    .map(content => content.type)
+    .join('-')}`;
+
 const App: FunctionComponent = () => {
   const [isSimulationRunning, setIsSimulationRunning] = React.useState(false);
-  const [step, setStep] = React.useState(1);
-  const [field, setField] = React.useState<OceanTile[][]>(() =>
+  const [year, setYear] = React.useState(1);
+  const [oceanTiles, setOceanTiles] = React.useState<OceanTile[][]>(() =>
     simulation.getOceanTiles()
   );
 
   const doProgressSimulation = React.useCallback(() => {
     const newField = simulation.progressSimulation();
-    setField(newField);
-    setStep(step => step + 1);
+    setOceanTiles(newField);
+    setYear(year => year + 1);
   }, []);
 
   React.useEffect(() => {
     if (isSimulationRunning) {
       const interval = setInterval(() => {
         doProgressSimulation();
-      }, 1000);
+      }, 500);
 
       return () => {
         clearInterval(interval);
@@ -64,19 +72,13 @@ const App: FunctionComponent = () => {
   return (
     <>
       <div>
-        {field.map((row, index) => (
+        {oceanTiles.map((row, index) => (
           <div
-            key={`row-${step}-${index}`}
+            key={`row-${index}`}
             style={{ display: 'flex', flexDirection: 'row' }}
           >
-            {row.map((column, index) => (
-              <Tile
-                key={`column-${index}-${column
-                  .getContents()
-                  .map(content => content.type)
-                  .join('-')}`}
-                tile={column}
-              ></Tile>
+            {row.map((tile, index) => (
+              <Tile key={createKey(index, tile)} oceanTile={tile}></Tile>
             ))}
           </div>
         ))}
@@ -88,15 +90,16 @@ const App: FunctionComponent = () => {
             doProgressSimulation();
           }}
         >
-          progress
+          progress by one step
         </button>
         <button
           onClick={() => {
             setIsSimulationRunning(isRunning => !isRunning);
           }}
         >
-          {isSimulationRunning ? 'stop' : 'start'}
+          {isSimulationRunning ? 'stop simulation' : 'start simulation'}
         </button>
+        <span>Year: {year}</span>
       </div>
     </>
   );

@@ -69,31 +69,50 @@ export class Ocean {
     parameterPopulation: SimulationParameters['population']
   ) => {
     const randomNumber = Math.floor(Math.random() * 100);
-    if (randomNumber > 0 && randomNumber <= parameterPopulation.fish) {
-      tile.addContent(new Fish({ tile }));
-    } else if (
-      randomNumber > parameterPopulation.fish &&
-      randomNumber <= parameterPopulation.fish + parameterPopulation.sharks
-    ) {
-      tile.addContent(new Shark({ tile }));
-    } else if (
-      randomNumber > parameterPopulation.fish + parameterPopulation.sharks &&
-      randomNumber <=
-        parameterPopulation.fish +
+    const bounds = {
+      fish: {
+        lower: 0,
+        upper: parameterPopulation.fish
+      },
+      sharks: {
+        lower: parameterPopulation.fish,
+        upper: parameterPopulation.fish + parameterPopulation.sharks
+      },
+      plankton: {
+        lower: parameterPopulation.fish + parameterPopulation.sharks,
+        upper:
+          parameterPopulation.fish +
           parameterPopulation.sharks +
           parameterPopulation.plankton
-    ) {
-      tile.addContent(new Plankton({ tile }));
-    } else if (
-      randomNumber >
-        parameterPopulation.fish +
+      },
+      rocks: {
+        lower:
+          parameterPopulation.fish +
           parameterPopulation.sharks +
-          parameterPopulation.plankton &&
-      randomNumber <=
-        parameterPopulation.fish +
+          parameterPopulation.plankton,
+        upper:
+          parameterPopulation.fish +
           parameterPopulation.sharks +
           parameterPopulation.plankton +
           parameterPopulation.rocks
+      }
+    };
+
+    if (randomNumber > bounds.fish.lower && randomNumber <= bounds.fish.upper) {
+      tile.addContent(new Fish({ tile }));
+    } else if (
+      randomNumber > bounds.sharks.lower &&
+      randomNumber <= bounds.sharks.upper
+    ) {
+      tile.addContent(new Shark({ tile }));
+    } else if (
+      randomNumber > bounds.plankton.lower &&
+      randomNumber <= bounds.plankton.upper
+    ) {
+      tile.addContent(new Plankton({ tile }));
+    } else if (
+      randomNumber > bounds.rocks.lower &&
+      randomNumber <= bounds.rocks.upper
     ) {
       tile.addContent(new Rock());
     }
@@ -134,12 +153,10 @@ export class Ocean {
 
   public progressSimulation = () => {
     const animals: Animal[] = [];
-    for (let row of this.oceanTiles) {
-      for (let tile of row) {
-        for (let content of tile.getContents()) {
-          if (content.type === 'fish' || content.type === 'shark') {
-            animals.push(content as Animal);
-          }
+    for (const tile of this.oceanTiles.flat()) {
+      for (const content of tile.getContents()) {
+        if (content.type === 'fish' || content.type === 'shark') {
+          animals.push(content as Animal);
         }
       }
     }
