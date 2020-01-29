@@ -1,22 +1,25 @@
 {
   "files": {
     "main.css": "/wator/static/css/main.44d9ae89.chunk.css",
-    "main.js": "/wator/static/js/main.5e6803e4.chunk.js",
-    "main.js.map": "/wator/static/js/main.5e6803e4.chunk.js.map",
+    "main.js": "/wator/static/js/main.36ad8f22.chunk.js",
+    "main.js.map": "/wator/static/js/main.36ad8f22.chunk.js.map",
     "runtime-main.js": "/wator/static/js/runtime-main.bf273a0e.js",
     "runtime-main.js.map": "/wator/static/js/runtime-main.bf273a0e.js.map",
-    "static/js/2.5b720dbf.chunk.js": "/wator/static/js/2.5b720dbf.chunk.js",
-    "static/js/2.5b720dbf.chunk.js.map": "/wator/static/js/2.5b720dbf.chunk.js.map",
+    "static/css/2.69507bff.chunk.css": "/wator/static/css/2.69507bff.chunk.css",
+    "static/js/2.8244f093.chunk.js": "/wator/static/js/2.8244f093.chunk.js",
+    "static/js/2.8244f093.chunk.js.map": "/wator/static/js/2.8244f093.chunk.js.map",
     "index.html": "/wator/index.html",
-    "precache-manifest.0590803d50fc3d0ca4009ba08720c5c1.js": "/wator/precache-manifest.0590803d50fc3d0ca4009ba08720c5c1.js",
+    "precache-manifest.1415d2a00727ac4f88672997f9658f6e.js": "/wator/precache-manifest.1415d2a00727ac4f88672997f9658f6e.js",
     "service-worker.js": "/wator/service-worker.js",
+    "static/css/2.69507bff.chunk.css.map": "/wator/static/css/2.69507bff.chunk.css.map",
     "static/css/main.44d9ae89.chunk.css.map": "/wator/static/css/main.44d9ae89.chunk.css.map",
-    "static/js/2.5b720dbf.chunk.js.LICENSE": "/wator/static/js/2.5b720dbf.chunk.js.LICENSE"
+    "static/js/2.8244f093.chunk.js.LICENSE": "/wator/static/js/2.8244f093.chunk.js.LICENSE"
   },
   "entrypoints": [
     "static/js/runtime-main.bf273a0e.js",
-    "static/js/2.5b720dbf.chunk.js",
+    "static/css/2.69507bff.chunk.css",
+    "static/js/2.8244f093.chunk.js",
     "static/css/main.44d9ae89.chunk.css",
-    "static/js/main.5e6803e4.chunk.js"
+    "static/js/main.36ad8f22.chunk.js"
   ]
 }

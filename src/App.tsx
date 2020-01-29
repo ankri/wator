@@ -1,10 +1,12 @@
 import React, { FunctionComponent } from 'react';
-import { Simulation } from './wator/Simulation';
+import DatGui, { DatButton, DatNumber, DatFolder } from 'react-dat-gui';
+import 'react-dat-gui/dist/index.css';
+import { Simulation, SimulationParameters } from './wator/Simulation';
 import { OceanTile } from './wator/tiles/OceanTile';
 import classNames from 'classnames';
 import './app.css';
 
-const simulation = Simulation.createSimulation({
+let simulation = Simulation.createSimulation({
   dimensions: {
     width: 25,
     height: 25
@@ -45,6 +47,23 @@ const createKey = (index: number, tile: OceanTile) =>
     .join('-')}`;
 
 const App: FunctionComponent = () => {
+  const [parameters, setParameters] = React.useState<
+    SimulationParameters & { simulation: { speed: number } }
+  >(() => ({
+    dimensions: {
+      width: 25,
+      height: 25
+    },
+    population: {
+      fish: 20,
+      sharks: 10,
+      plankton: 30,
+      rocks: 5
+    },
+    simulation: {
+      speed: 350
+    }
+  }));
   const [isSimulationRunning, setIsSimulationRunning] = React.useState(false);
   const [year, setYear] = React.useState(1);
   const [oceanTiles, setOceanTiles] = React.useState<OceanTile[][]>(() =>
@@ -61,16 +80,106 @@ const App: FunctionComponent = () => {
     if (isSimulationRunning) {
       const interval = setInterval(() => {
         doProgressSimulation();
-      }, 350);
+      }, parameters.simulation.speed);
 
       return () => {
         clearInterval(interval);
       };
     }
-  }, [isSimulationRunning, doProgressSimulation]);
+  }, [isSimulationRunning, doProgressSimulation, parameters]);
 
   return (
     <>
+      <DatGui
+        data={parameters}
+        onUpdate={(
+          newParameters: SimulationParameters & {
+            simulation: { speed: number };
+          }
+        ) => {
+          setParameters(newParameters);
+        }}
+      >
+        <DatFolder title="Dimensions" closed={false}>
+          <DatNumber
+            path="dimensions.width"
+            label="Width"
+            min={20}
+            max={50}
+            step={1}
+          />
+          <DatNumber
+            path="dimensions.height"
+            label="Height"
+            min={20}
+            max={50}
+            step={1}
+          />
+        </DatFolder>
+        <DatFolder title="Population" closed={false}>
+          <DatNumber
+            path="population.fish"
+            label="% Fishes"
+            min={1}
+            max={100}
+            step={1}
+          />
+          <DatNumber
+            path="population.sharks"
+            label="% Sharks"
+            min={1}
+            max={100}
+            step={1}
+          />
+          <DatNumber
+            path="population.plankton"
+            label="% Plankton"
+            min={1}
+            max={100}
+            step={1}
+          />
+          <DatNumber
+            path="population.rocks"
+            label="% Rocks"
+            min={1}
+            max={100}
+            step={1}
+          />
+        </DatFolder>
+        <DatFolder title="Simulation">
+          <DatNumber
+            path="simulation.speed"
+            label="Speed in ms"
+            min={100}
+            max={5000}
+            step={100}
+          />
+        </DatFolder>
+
+        <DatButton
+          onClick={() => {
+            setIsSimulationRunning(false);
+            simulation = Simulation.createSimulation(parameters);
+            setOceanTiles(simulation.getOceanTiles());
+            setYear(1);
+          }}
+          label="Restart with new Parameters"
+        ></DatButton>
+        <DatButton
+          disabled={isSimulationRunning}
+          onClick={() => {
+            doProgressSimulation();
+          }}
+          label="Progress Simulation"
+        ></DatButton>
+        <DatButton
+          onClick={() => {
+            setIsSimulationRunning(isRunning => !isRunning);
+          }}
+          label={isSimulationRunning ? 'stop simulation' : 'start simulation'}
+        ></DatButton>
+      </DatGui>
+
       <div>
         {oceanTiles.map((row, index) => (
           <div
@@ -82,24 +191,6 @@ const App: FunctionComponent = () => {
             ))}
           </div>
         ))}
-      </div>
-      <div>
-        <button
-          disabled={isSimulationRunning}
-          onClick={() => {
-            doProgressSimulation();
-          }}
-        >
-          progress by one step
-        </button>
-        <button
-          onClick={() => {
-            setIsSimulationRunning(isRunning => !isRunning);
-          }}
-        >
-          {isSimulationRunning ? 'stop simulation' : 'start simulation'}
-        </button>
-        <span>Year: {year}</span>
       </div>
     </>
   );
