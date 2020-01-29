@@ -1,38 +1,25 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.tile {
+  width: 28px;
+  height: 28px;
+  border: 4px solid;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  /* border: 1px solid whitesmoke; */
 }
 
-.App-link {
-  color: #61dafb;
+.water,
+.fish,
+.shark {
+  border-color: cornflowerblue;
+  background-color: cornflowerblue;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.plankton {
+  background-color: darkolivegreen;
+}
+
+.rock {
+  border-color: cornflowerblue;
+  background-color: dimgrey;
 }
